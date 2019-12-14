@@ -1,0 +1,20 @@
+---
+- name: "Install required packages on RedHat "
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - epel-release
+    - nginx
+- name: "Enable and start nginx service"
+  service: name=nginx state=started enabled=yes
+- name: "Enable and start firewalld service"
+  service: name=firewalld state=started enabled=yes
+- name: "Enable port 80/tcp"
+  firewalld:
+    port: 80/tcp
+    zone: public
+    permanent: yes
+    state: enabled
+- name: "Reload firewalld service"
+  service: name=firewalld state=reloaded
